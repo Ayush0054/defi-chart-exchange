@@ -2,32 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 247 41% 98%;
+    --foreground: 247 52% 3%;
+    --muted: 217 27% 91%;
+    --muted-foreground: 217 3% 26%;
+    --popover: 247 41% 98%;
+    --popover-foreground: 247 52% 3%;
+    --card: 247 41% 97%;
+    --card-foreground: 247 52% 2%;
+    --border: 247 14% 88%;
+    --input: 247 14% 88%;
+    --primary: 247 37% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 37% 56%;
+    --secondary-foreground: 0 0% 0%;
+    --accent: 277 37% 56%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 13 82% 44%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 247 37% 56%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 247 52% 2%;
+    --foreground: 247 17% 98%;
+    --muted: 217 27% 9%;
+    --muted-foreground: 217 3% 74%;
+    --popover: 247 52% 2%;
+    --popover-foreground: 247 17% 98%;
+    --card: 247 52% 3%;
+    --card-foreground: 247 17% 99%;
+    --border: 247 14% 15%;
+    --input: 247 14% 15%;
+    --primary: 247 37% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 37% 56%;
+    --secondary-foreground: 0 0% 0%;
+    --accent: 277 37% 56%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 13 82% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 247 37% 56%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
