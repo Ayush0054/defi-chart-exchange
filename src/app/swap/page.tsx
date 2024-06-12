@@ -77,7 +77,7 @@ export default function Home() {
       //   takerAddress: address,
     };
 
-    const headers = { "0x-api-key": process.env.OX_API_KEY };
+    const headers = { "0x-api-key": process.env.NEXT_PUBLIC_OX_API_KEY };
     const response = await fetch(
       `https://api.0x.org/swap/v1/price?${qs.stringify(params)}`,
       //@ts-ignore
@@ -101,7 +101,7 @@ export default function Home() {
       takerAddress: address,
     };
 
-    const headers = { "0x-api-key": process.env.OX_API_KEY };
+    const headers = { "0x-api-key": process.env.NEXT_PUBLIC_OX_API_KEY };
     const response = await fetch(
       `https://api.0x.org/swap/v1/quote?${qs.stringify(params)}`,
       //@ts-ignore
