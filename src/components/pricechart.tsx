@@ -24,6 +24,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
 import {
   Select,
   SelectContent,
@@ -31,9 +32,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
 
 const PriceChart = () => {
-  const [priceData, setPriceData] = useState<any>({
+  const [priceData, setPriceData] = useState({
     labels: [],
     datasets: [
       {
@@ -45,9 +47,9 @@ const PriceChart = () => {
       },
     ],
   });
-  const [filter, setFilter] = useState<string>("1d");
-  const [crypto, setCrypto] = useState<string>("bitcoin");
-  const [socket, setSocket] = useState<any>(null);
+  const [filter, setFilter] = useState("1d");
+  const [crypto, setCrypto] = useState("bitcoin");
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const fetchPriceData = async () => {
@@ -91,39 +93,46 @@ const PriceChart = () => {
   }, [filter, crypto]);
 
   useEffect(() => {
-    // Initialize WebSocket connection
     const newSocket = io("https://streamer.cryptocompare.com/");
+    //@ts-ignore
     setSocket(newSocket);
 
-    // Subscribe to real-time price updates
     const subscription = `2~Coinbase~${crypto.toUpperCase()}~USD`;
     newSocket.emit("SubAdd", { subs: [subscription] });
 
-    newSocket.on("m", (message: any) => {
+    newSocket.on("m", (message) => {
       const messageType = message.split("~")[0];
       if (messageType === "2") {
         const price = parseFloat(message.split("~")[5]);
         const time = new Date(parseInt(message.split("~")[6]) * 1000);
+        //@ts-ignore
         setPriceData((prevData: any) => {
-          const newData = {
-            ...prevData,
-            labels: [
-              ...prevData.labels,
-              time.toLocaleString("en-US", {
-                month: "numeric",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              }),
-            ],
+          const newLabels = [
+            ...prevData.labels,
+            time.toLocaleString("en-US", {
+              month: "numeric",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+            }),
+          ];
+          const newData = [...prevData.datasets[0].data, price];
+
+          // Limit data points to the last 100 entries
+          if (newLabels.length > 100) {
+            newLabels.shift();
+            newData.shift();
+          }
+
+          return {
+            labels: newLabels,
             datasets: [
               {
                 ...prevData.datasets[0],
-                data: [...prevData.datasets[0].data, price],
+                data: newData,
               },
             ],
           };
-          return newData;
         });
       }
     });
@@ -134,19 +143,18 @@ const PriceChart = () => {
       newSocket.close();
     };
   }, [crypto]);
+
   const handleCrypto = (val: any) => {
     setCrypto(val);
   };
   const handleFilter = (val: any) => {
     setFilter(val);
   };
+
   return (
-    <div className=" flex max-lg:flex-col max-lg:items-center gap-5 mt-12 max-lg:mx-4">
-      <div className=" m-4 flex flex-col gap-4 max-lg:w-full">
-        <Select
-          onValueChange={handleCrypto}
-          // value={crypto}
-        >
+    <div className="flex max-lg:flex-col max-lg:items-center gap-5 mt-12 max-lg:mx-4">
+      <div className="m-4 flex flex-col gap-4 max-lg:w-full">
+        <Select onValueChange={handleCrypto}>
           <SelectTrigger className="lg:w-[180px] max-lg:w-full">
             <SelectValue placeholder="Cryptocurrency" />
           </SelectTrigger>
@@ -157,10 +165,7 @@ const PriceChart = () => {
           </SelectContent>
         </Select>
 
-        <Select
-          onValueChange={handleFilter}
-          // value={crypto}
-        >
+        <Select onValueChange={handleFilter}>
           <SelectTrigger className="lg:w-[180px] max-lg:w-full">
             <SelectValue placeholder="Time Frame" />
           </SelectTrigger>
@@ -170,10 +175,14 @@ const PriceChart = () => {
             <SelectItem value="30d">Month</SelectItem>
           </SelectContent>
         </Select>
+        <w3m-button />
+        <Link href="/swap" className=" hover:underline">
+          SWAP
+        </Link>
       </div>
-      <Card className="  lg:w-[1000px] max-lg:w-full  ">
+      <Card className="lg:w-[1000px] max-lg:w-full">
         {priceData.labels.length > 0 ? (
-          <Line className=" " data={priceData} />
+          <Line className="w-full" data={priceData} />
         ) : (
           <p>Loading data...</p>
         )}

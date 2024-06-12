@@ -18,7 +18,7 @@ const mainnet = {
 const metadata = {
   name: "My Website",
   description: "My Website description",
-  url: "https://mywebsite.com", // origin must match your domain & subdomain
+  url: "https://defi-chart-exchange.vercel.app/", // origin must match your domain & subdomain
   icons: ["https://avatars.mywebsite.com/"],
 };
 // 4. Create Ethers config
@@ -27,11 +27,11 @@ const ethersConfig = defaultConfig({
   metadata,
 
   /*Optional*/
-  enableEIP6963: true, // true by default
-  enableInjected: true, // true by default
-  enableCoinbase: true, // true by default
-  rpcUrl: "...", // used for the Coinbase SDK
-  defaultChainId: 1, // used for the Coinbase SDK
+  enableEIP6963: true,
+  enableInjected: true,
+  enableCoinbase: true,
+  rpcUrl: "...",
+  defaultChainId: 1,
 });
 
 // 5. Create a Web3Modal instance
